@@ -31,7 +31,7 @@ class RollingHash:
     def window_text(self):
         return self.text[self.window_start:self.window_end]
 
-def task33():
+def task33_1():
     word = input()
     text = input()
 
@@ -51,7 +51,7 @@ def task33():
     return None
 
 
-def task33_():
+def task33_2():
     pattern = input()
     text = input()
 
@@ -78,6 +78,31 @@ def task33_():
             print(i, end=' ')
 
 
+def task33_3():
+    pattern = input()
+    string = input()
+    pos = string.find(pattern, 0)
+    if pos != -1:
+        print(pos, end=' ')
+        while pos != -1:
+            pos = string.find(pattern, pos+1)
+            if pos != -1:
+                print(pos, end=' ')
+            else:
+                break
+
+def task33_4():
+    pattern = input()
+    string = input()
+    slen, plen = len(string), len(pattern)
+    sp, ss = sum(map(ord, pattern)), sum(map(ord, string[:plen])) + ord(string[-1]) - ord(string[plen-1])
+    for i in range(slen-plen+1):
+        ss = ss - ord(string[i-1]) + ord(string[i+plen-1])
+        if ss == sp and pattern == string[i:i+plen]:
+            print(i, end=' ')
+
+task33 = task33_4
+
 class Task33TestCase(unittest.TestCase):
     @patch('sys.stdout', new_callable=StringIO)
     def test1(self, mock_stdout):
@@ -99,6 +124,13 @@ class Task33TestCase(unittest.TestCase):
         with patch('builtins.input', side_effect=user_input):
             task33()
             self.assertEqual(mock_stdout.getvalue(), '1 2 3 ')
+
+    @patch('sys.stdout', new_callable=StringIO)
+    def test4(self, mock_stdout):
+        user_input = ['a', 'a']
+        with patch('builtins.input', side_effect=user_input):
+            task33()
+            self.assertEqual(mock_stdout.getvalue(), '0 ')
 
 
 if __name__ == '__main__':
